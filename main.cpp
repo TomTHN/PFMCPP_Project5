@@ -70,7 +70,7 @@ write 3 UDTs below that EACH have:
  You will use those in Part 3 of this project.
 
  */
-
+#include <iostream>
 /*
  copied UDT 1:
  */
@@ -277,7 +277,7 @@ struct Pedals
     void assemble();
     void turn();
     float accelerateBike(float currentSpeed, float targetSpeed); // returns updated speed
-    void hitShin(int hitsTillBlood = 10);
+    void hitShin(int hitsTillBlood);
 };
 
 Pedals::Pedals()
@@ -316,11 +316,70 @@ void Pedals::hitShin(int hitsTillBlood = 10)
  new UDT 4:
  with 2 member functions
  */
+struct HolidayArea
+{
+    HolidayArea();
+    ~HolidayArea();
 
+    BikePark holidayBikePark;
+    BikePark::Bike rentalBike;
+
+    void rentBike(int pricePerDay, int rentalPeriod);
+    void buyTicketBikePark(int howManyDays, int ticketPrice);
+};
+
+HolidayArea::HolidayArea()
+{
+    std::cout << "Holiday area being constructed!" << std::endl;
+    rentalBike.inflateTires(25.00f, 20.00f);
+}
+
+HolidayArea::~HolidayArea()
+{
+    std::cout << "Holiday area being destructed!" << std::endl;
+    rentalBike.repair();
+}
+
+void HolidayArea::rentBike(int pricePerDay, int rentalPeriod)
+{
+    int price = pricePerDay * rentalPeriod;
+    if(price > 500)
+    {
+        rentalBike.hasFullSuspension = true;
+    }
+    else
+    {
+        rentalBike.hasFullSuspension = false;
+    }    
+}
+
+void HolidayArea::buyTicketBikePark(int howManyDays, int ticketPrice)
+{
+    std::cout << "You have to pay " << howManyDays * ticketPrice << "$" << std::endl;
+}
 /*
  new UDT 5:
  with 2 member functions
  */
+struct EuropeanCentralBank
+{
+    EuropeanCentralBank();
+    ~EuropeanCentralBank();
+
+    Bank myBank;
+    Bank::Customer tom;
+
+    void increasKeyInterestRate(float increaseKeyInterestRate);
+    void printMoney(float amountInBillion);
+};
+
+EuropeanCentralBank::EuropeanCentralBank()
+{
+    
+}
+
+EuropeanCentralBank::EuropeanCentralBank()
+
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
