@@ -368,6 +368,7 @@ struct EuropeanCentralBank
 
     Bank myBank;
     Bank::Customer tom;
+    float keyInterestRate {1.02f};
 
     void increasKeyInterestRate(float increaseKeyInterestRate);
     void printMoney(float amountInBillion);
@@ -375,11 +376,26 @@ struct EuropeanCentralBank
 
 EuropeanCentralBank::EuropeanCentralBank()
 {
-    
+    std::cout << "European central bank being constructed!" << std::endl;
 }
 
-EuropeanCentralBank::EuropeanCentralBank()
+EuropeanCentralBank::~EuropeanCentralBank()
+{
+    std::cout << "European central bank being destructed!" << std::endl;
+}
 
+void EuropeanCentralBank::increasKeyInterestRate(float increaseKeyInterestRate)
+{
+    keyInterestRate += increaseKeyInterestRate;
+}
+
+void EuropeanCentralBank::printMoney(float amountInBillion)
+{
+    if(amountInBillion > 100.00f)
+    {
+        std::cout << "inflation is rising" << std::endl;
+    }
+}
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
