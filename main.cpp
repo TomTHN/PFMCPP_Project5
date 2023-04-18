@@ -74,15 +74,244 @@ write 3 UDTs below that EACH have:
 /*
  copied UDT 1:
  */
+struct Bank
+{
+    Bank();
 
+    int numATM;
+    int amountEmployees {20};
+    int amountSecurityCameras {5};
+    int numBankCounters = 5;
+    int numCustomersDay = 1000;
+    float moneyATM {40000.00f};
+
+    struct Customer
+    {
+        Customer();
+
+        int customerNumber, age;
+        std::string gender = "male";
+        float bankBalance {4550.60f};
+        int memberTime  = 600; //days
+
+        void cancelBankAccount(bool state);
+        std::string talkEmployee(std::string question);
+        void robBank(bool decision);
+    };
+
+    float withdrawMoney(Customer customer, float moneyToWithdraw); //returns updated bank balance
+    float depositMoney(Customer customer, float moneyToDeposit); //returns updated bank balance
+    float takeCredit(Customer customer, float amountCredit, float periodToRepay); //returns interest rate
+    void refillATM(int amountWithdrawFiftyDollar);
+};
+
+Bank::Bank() : numATM(3)
+{
+    std::cout << std::endl << "Bank being constructed!" << std::endl;
+}
+
+Bank::Customer::Customer() : customerNumber{12345678}, age{45}
+{
+    std::cout << "Bank::Customer being constructed!" << std::endl;
+}
+
+void Bank::Customer::cancelBankAccount(bool state)
+{
+    if(state)
+    {
+        std::cout << "I want to cancel my bank account!" << std::endl;
+    }
+}
+
+std::string Bank::Customer::talkEmployee(std::string question)
+{
+    std::cout << question << std::endl;
+    return question;
+}
+
+void Bank::Customer::robBank(bool desicion)
+{
+    if(desicion)
+    {
+        std::cout << "Ladies and gentlemen, this is a robbery!" << std::endl;
+    }
+}
+
+float Bank::withdrawMoney(Customer customer, float moneyToWithdraw)
+{
+    float updatedBankBalance = customer.bankBalance - moneyToWithdraw;
+    std::cout << "Your new bank balance is: " << updatedBankBalance << "."  << std::endl;
+    return updatedBankBalance;
+}
+
+float Bank::depositMoney(Customer customer, float moneyToDeposit)
+{
+    float updatedBankBalance = customer.bankBalance + moneyToDeposit;
+    std::cout << "Your new bank balance is: " << updatedBankBalance << "." << std::endl;
+    return updatedBankBalance;
+}
+
+float Bank::takeCredit(Customer customer, float amountCredit, float periodToRepay)
+{
+    customer.bankBalance += amountCredit;
+    return amountCredit / periodToRepay;
+}
+
+void Bank::refillATM(int amountWithdrawFiftyDollar)
+{
+    for (int i = 0; i < amountWithdrawFiftyDollar; ++i)
+    {
+        moneyATM -= 50.00f;
+        if(moneyATM <= 1000.00f)
+        {
+        std::cout << "Only " << moneyATM << " Dollar left. Please refill ATM" << std::endl;
+        }
+    }  
+}
 /*
  copied UDT 2:
  */
+struct BikePark
+{
+    BikePark();
 
+    int amountTracks;
+    float hightMountain; //meters
+    int numLifts = 5;
+    int amountBlackDiamontTracks = 10;
+    int accidentsYear = 700;
+    int bikeMaximum {6};
+
+    struct Bike
+    {
+        Bike();
+
+        bool hasFullSuspension = true;
+        std::string brand = "GT";
+        std::string color = "red";
+        float wheelSize = 27.5f;
+        float ageBike = 4.5f;
+        float pressureSuspension = 95.4f;
+        int sag;
+
+        float inflateTires(float targetPressureTire, float currentPressur); //Returns updated pressure 
+        int setupSuspension(float targetPressure, int targetSag);
+        void repair();
+    };
+
+    void rideDownhill();
+    bool eatLunch(); //returns false if person is still hungry     
+    void haveGoodTime();
+    void fillPickupTruckWithBikes(int amountOfBikes);
+};
+
+BikePark::BikePark() : amountTracks{23}, hightMountain{3400}
+{
+    std::cout << "BikePark being constructed!" << std::endl;
+}
+
+BikePark::Bike::Bike() : sag{15}
+{
+    std::cout << "BikePark::Bike being constructed!" << std::endl;
+}
+
+float BikePark::Bike::inflateTires(float targetPressureTire, float currentPressur)
+{
+    return targetPressureTire - currentPressur;
+}
+
+int BikePark::Bike::setupSuspension(float targetPressure, int targetSag)
+{
+    pressureSuspension = targetPressure;
+    std::cout << "my sag is " << sag << " cm but I need " << targetSag << " cm!" << std::endl;
+    return targetSag - sag;
+}
+
+void BikePark::Bike::repair()
+{
+    
+}
+
+void BikePark::rideDownhill()
+{
+    
+}
+
+bool BikePark::eatLunch()
+{
+    return true;
+}
+
+void BikePark::haveGoodTime()
+{
+    
+}
+
+void BikePark::fillPickupTruckWithBikes(int amountOfBikes)
+{
+    for(int addedBikes = 0; amountOfBikes > addedBikes; ++addedBikes)
+    {
+        if(addedBikes == bikeMaximum)
+        {
+            std::cout << "Truck is full!" << std::endl;
+        }   
+        else
+        {
+            std::cout << "Still space!" << std::endl;
+        }
+    }
+}
 /*
  copied UDT 3:
  */
+struct Pedals
+{
+    Pedals();
 
+    std::string brand {"RaceFace"};
+    int size = 10;
+    std::string color {"black"};
+    std::string material = "titanium";
+    int amountTorque = 15; //Nm
+
+    void assemble();
+    void turn();
+    float accelerateBike(float currentSpeed, float targetSpeed); // returns updated speed
+    void hitShin(int hitsTillBlood = 10);
+};
+
+Pedals::Pedals()
+{
+    std::cout << "Pedals being constructed!" << std::endl;
+}
+
+void Pedals::assemble()
+{
+    
+}
+
+void Pedals::turn()
+{
+    
+}
+
+float Pedals::accelerateBike(float currentSpeed, float targetSpeed)
+{
+    return targetSpeed - currentSpeed;
+}
+
+void Pedals::hitShin(int hitsTillBlood = 10)
+{
+    for(int hit = 0; hit < hitsTillBlood; ++hit)
+    {
+        std::cout << hit << std::endl;
+            
+        if(hit == 9)
+        {
+            std::cout << "You´re bleeding" << std::endl;
+        }
+    }
+}
 /*
  new UDT 4:
  with 2 member functions
