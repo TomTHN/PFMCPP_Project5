@@ -77,6 +77,7 @@ write 3 UDTs below that EACH have:
 struct Bank
 {
     Bank();
+    ~Bank();
 
     int numATM;
     int amountEmployees {20};
@@ -88,6 +89,7 @@ struct Bank
     struct Customer
     {
         Customer();
+        ~Customer();
 
         int customerNumber, age;
         std::string gender = "male";
@@ -107,12 +109,22 @@ struct Bank
 
 Bank::Bank() : numATM(3)
 {
-    std::cout << std::endl << "Bank being constructed!" << std::endl;
+    std::cout << "Bank being constructed!" << std::endl;
+}
+
+Bank::~Bank()
+{
+    std::cout << "Bank being destructed!" << std::endl;
 }
 
 Bank::Customer::Customer() : customerNumber{12345678}, age{45}
 {
     std::cout << "Bank::Customer being constructed!" << std::endl;
+}
+
+Bank::Customer::~Customer()    
+{
+    std::cout << "Bank::Customer being destructed!" << std::endl;
 }
 
 void Bank::Customer::cancelBankAccount(bool state)
@@ -174,6 +186,7 @@ void Bank::refillATM(int amountWithdrawFiftyDollar)
 struct BikePark
 {
     BikePark();
+    ~BikePark();
 
     int amountTracks;
     float hightMountain; //meters
@@ -185,6 +198,7 @@ struct BikePark
     struct Bike
     {
         Bike();
+        ~Bike();
 
         bool hasFullSuspension = true;
         std::string brand = "GT";
@@ -210,9 +224,19 @@ BikePark::BikePark() : amountTracks{23}, hightMountain{3400}
     std::cout << "BikePark being constructed!" << std::endl;
 }
 
+BikePark::~BikePark()
+{
+    std::cout << "BikePark being destructed!" << std::endl;
+}
+
 BikePark::Bike::Bike() : sag{15}
 {
     std::cout << "BikePark::Bike being constructed!" << std::endl;
+}
+
+BikePark::Bike::~Bike()
+{
+    std::cout << "BikePark::Bike being destructed!" << std::endl;
 }
 
 float BikePark::Bike::inflateTires(float targetPressureTire, float currentPressur)
@@ -249,7 +273,7 @@ void BikePark::haveGoodTime()
 
 void BikePark::fillPickupTruckWithBikes(int amountOfBikes)
 {
-    for(int addedBikes = 0; amountOfBikes > addedBikes; ++addedBikes)
+    for(int addedBikes = 0; addedBikes < amountOfBikes; ++addedBikes)
     {
         if(addedBikes == bikeMaximum)
         {
@@ -267,6 +291,7 @@ void BikePark::fillPickupTruckWithBikes(int amountOfBikes)
 struct Pedals
 {
     Pedals();
+    ~Pedals();
 
     std::string brand {"RaceFace"};
     int size = 10;
@@ -283,6 +308,11 @@ struct Pedals
 Pedals::Pedals()
 {
     std::cout << "Pedals being constructed!" << std::endl;
+}
+
+Pedals::~Pedals()
+{
+    std::cout << "Pedals being destructed!" << std::endl;
 }
 
 void Pedals::assemble()
@@ -343,7 +373,7 @@ HolidayArea::~HolidayArea()
 void HolidayArea::rentBike(int pricePerDay, int rentalPeriod)
 {
     int price = pricePerDay * rentalPeriod;
-    if(price > 500)
+    if(500 < price)
     {
         rentalBike.hasFullSuspension = true;
     }
@@ -367,7 +397,7 @@ struct EuropeanCentralBank
     ~EuropeanCentralBank();
 
     Bank myBank;
-    Bank::Customer tom;
+    Bank::Customer guy;
     float keyInterestRate {1.02f};
 
     void increasKeyInterestRate(float increaseKeyInterestRate);
@@ -391,7 +421,7 @@ void EuropeanCentralBank::increasKeyInterestRate(float increaseKeyInterestRate)
 
 void EuropeanCentralBank::printMoney(float amountInBillion)
 {
-    if(amountInBillion > 100.00f)
+    if(100.00f < amountInBillion)
     {
         std::cout << "inflation is rising" << std::endl;
     }
@@ -414,5 +444,45 @@ void EuropeanCentralBank::printMoney(float amountInBillion)
 #include <iostream>
 int main()
 {
+    Bank newBank;
+    Bank::Customer tom;
+    BikePark newBikePark;
+    BikePark::Bike newBike;
+    Pedals newPedals;
+    std::cout << std::endl;
+    HolidayArea newHolidayArea;
+    std::cout << std::endl;
+    EuropeanCentralBank newEuropeanCentralBank;
+    std::cout << std::endl;
+
+    newBank.depositMoney(tom, 2000.50f);
+    newBank.withdrawMoney(tom, 500.0f);
+    newBank.refillATM(10);
+    tom.cancelBankAccount(false);
+    tom.talkEmployee("I need to talk to your boss");
+    tom.robBank(true);
+
+    newBikePark.eatLunch();
+    newBikePark.haveGoodTime();
+    newBikePark.rideDownhill();
+    newBikePark.fillPickupTruckWithBikes(7);
+    newBike.inflateTires(27.0f, 20.0f);
+    newBike.repair();
+    newBike.setupSuspension(95.4f, 25);
+
+    float accelerateBikeReturn = newPedals.accelerateBike(8.5f, 15.0f);
+    newPedals.assemble();
+    newPedals.turn();
+    newPedals.hitShin(10);
+
+    std::cout << "You need to drive " << accelerateBikeReturn << " km/h faster!" << std::endl;
+
+    newHolidayArea.rentBike(100, 6);
+    newHolidayArea.buyTicketBikePark(2, 39);
+    
+    newEuropeanCentralBank.increasKeyInterestRate(0.05f);
+    newEuropeanCentralBank.printMoney(150.00f);
+
     std::cout << "good to go!" << std::endl;
+    std::cout << std::endl;
 }
