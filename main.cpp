@@ -110,6 +110,7 @@ struct Bank
     float depositMoney(Customer customer, float moneyToDeposit); //returns updated bank balance
     float takeCredit(Customer customer, float amountCredit, float periodToRepay); //returns interest rate
     void refillATM(int amountWithdrawFiftyDollar);
+    void printAmountCounters();
 };
 
 Bank::Bank() : numATM(3)
@@ -181,10 +182,16 @@ void Bank::refillATM(int amountWithdrawFiftyDollar)
         moneyATM -= 50.00f;
         if(moneyATM <= 1000.00f)
         {
-        std::cout << "Only " << moneyATM << " Dollar left. Please refill ATM" << std::endl;
+            std::cout << "Only " << moneyATM << " Dollar left. Please refill ATM" << std::endl;
         }
     }  
 }
+
+void Bank::printAmountCounters()
+{
+    std::cout << "Number of counters: " << this->numBankCounters << " (print function)" << std::endl;
+}
+
 /*
  copied UDT 2:
  */
@@ -216,6 +223,7 @@ struct BikePark
         float inflateTires(float targetPressureTire, float currentPressur); //Returns updated pressure 
         int setupSuspension(float targetPressure, int targetSag);
         void repair();
+        void printwheelSize();
     };
 
     void rideDownhill();
@@ -289,6 +297,11 @@ void BikePark::fillPickupTruckWithBikes(int amountOfBikes)
             std::cout << "Still space!" << std::endl;
         }
     }
+}
+
+void BikePark::Bike::printwheelSize()
+{
+    std::cout << "Wheel size: " << this->wheelSize << " (print function)" << std::endl;
 }
 /*
  copied UDT 3:
@@ -467,6 +480,9 @@ int main()
     tom.talkEmployee("I need to talk to your boss");
     tom.robBank(true);
 
+    std::cout << "Number of counters: " << newBank.numBankCounters << " (print directly)" << std::endl;
+    newBank.printAmountCounters();
+    
     newBikePark.eatLunch();
     newBikePark.haveGoodTime();
     newBikePark.rideDownhill();
@@ -474,6 +490,9 @@ int main()
     newBike.inflateTires(27.0f, 20.0f);
     newBike.repair();
     newBike.setupSuspension(95.4f, 25);
+
+    std::cout << "Wheel size: " << newBike.wheelSize << " (print directly)" << std::endl;
+    newBike.printwheelSize();
 
     float accelerateBikeReturn = newPedals.accelerateBike(8.5f, 15.0f);
     newPedals.assemble();
