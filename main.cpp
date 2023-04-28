@@ -80,6 +80,7 @@ void Axe::aConstMemberFunction() const { }
 
 
 #include <iostream>
+#include "LeakedObjectDetector.h"
 /*
  copied UDT 1:
  */
@@ -108,6 +109,8 @@ struct Bank
         void cancelBankAccount(bool state);
         std::string talkEmployee(std::string question);
         void robBank(bool decision);
+
+        JUCE_LEAK_DETECTOR(Customer)
     };
 
     float withdrawMoney(Customer customer, float moneyToWithdraw); //returns updated bank balance
@@ -115,6 +118,8 @@ struct Bank
     float takeCredit(Customer customer, float amountCredit, float periodToRepay); //returns interest rate
     void refillATM(int amountWithdrawFiftyDollar);
     void printAmountCounters();
+
+    JUCE_LEAK_DETECTOR(Bank)
 };
 
 Bank::Bank() : numATM(3)
@@ -196,6 +201,14 @@ void Bank::printAmountCounters()
     std::cout << "Number of counters: " << this->numBankCounters << " (print function)" << std::endl;
 }
 
+struct BankWrapper
+{
+    BankWrapper(Bank* ptr) : PointerToBank (ptr) { }
+    ~BankWrapper() { delete PointerToBank; }
+
+    Bank* PointerToBank = nullptr;
+};
+
 /*
  copied UDT 2:
  */
@@ -228,12 +241,16 @@ struct BikePark
         int setupSuspension(float targetPressure, int targetSag);
         void repair();
         void printwheelSize();
+
+        JUCE_LEAK_DETECTOR(Bike)
     };
 
     void rideDownhill();
     bool eatLunch(); //returns false if person is still hungry     
     void haveGoodTime();
     void fillPickupTruckWithBikes(int amountOfBikes);
+
+    JUCE_LEAK_DETECTOR(BikePark)
 };
 
 BikePark::BikePark() : amountTracks{23}, hightMountain{3400}
@@ -307,6 +324,14 @@ void BikePark::Bike::printwheelSize()
 {
     std::cout << "Wheel size: " << this->wheelSize << " (print function)" << std::endl;
 }
+
+struct BikeParkWrapper
+{
+    BikeParkWrapper(BikePark* ptr) : PointerToBikePark (ptr) { }
+    ~BikeParkWrapper() { delete PointerToBikePark; }
+
+    BikePark* PointerToBikePark = nullptr;
+};
 /*
  copied UDT 3:
  */
@@ -325,6 +350,8 @@ struct Pedals
     void turn();
     float accelerateBike(float currentSpeed, float targetSpeed); // returns updated speed
     void hitShin(int hitsTillBlood);
+
+    JUCE_LEAK_DETECTOR(Pedals)
 };
 
 Pedals::Pedals()
@@ -364,6 +391,15 @@ void Pedals::hitShin(int hitsTillBlood = 10)
         }
     }
 }
+
+struct PedalsWrapper
+{
+    PedalsWrapper(Pedals* ptr) : PointerToPedals (ptr) { }
+    ~PedalsWrapper() { delete PointerToPedals; }
+
+    Pedals* PointerToPedals = nullptr;
+};
+
 /*
  new UDT 4:
  with 2 member functions
@@ -378,6 +414,8 @@ struct HolidayArea
 
     void rentBike(int pricePerDay, int rentalPeriod);
     void buyTicketBikePark(int howManyDays, int ticketPrice);
+
+    JUCE_LEAK_DETECTOR(HolidayArea)
 };
 
 HolidayArea::HolidayArea()
@@ -409,6 +447,15 @@ void HolidayArea::buyTicketBikePark(int howManyDays, int ticketPrice)
 {
     std::cout << "You have to pay " << howManyDays * ticketPrice << "$" << std::endl;
 }
+
+struct HolidayAreaWrapper
+{
+    HolidayAreaWrapper(HolidayArea* ptr) : PointerToHolidayArea (ptr) { }
+    ~HolidayAreaWrapper() { delete PointerToHolidayArea; }
+
+    HolidayArea* PointerToHolidayArea = nullptr;
+};
+
 /*
  new UDT 5:
  with 2 member functions
@@ -424,6 +471,8 @@ struct EuropeanCentralBank
 
     void increasKeyInterestRate(float increaseKeyInterestRate);
     void printMoney(float amountInBillion);
+
+    JUCE_LEAK_DETECTOR(EuropeanCentralBank)
 };
 
 EuropeanCentralBank::EuropeanCentralBank()
@@ -447,7 +496,15 @@ void EuropeanCentralBank::printMoney(float amountInBillion)
     {
         std::cout << "inflation is rising" << std::endl;
     }
-}
+} 
+
+struct EuropeanCentralBankWrapper
+{
+    EuropeanCentralBankWrapper(EuropeanCentralBank* ptr) : PointerToEuropeanCentralBank (ptr) { }
+    ~EuropeanCentralBankWrapper() { delete PointerToEuropeanCentralBank; }
+
+    EuropeanCentralBank* PointerToEuropeanCentralBank = nullptr;
+};
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -466,31 +523,31 @@ void EuropeanCentralBank::printMoney(float amountInBillion)
 #include <iostream>
 int main()
 {
-    Bank newBank;
+    BankWrapper newBank(new Bank());
     Bank::Customer tom;
-    BikePark newBikePark;
+    BikeParkWrapper newBikePark(new BikePark());
     BikePark::Bike newBike;
-    Pedals newPedals;
+    PedalsWrapper newPedals(new Pedals());
     std::cout << std::endl;
-    HolidayArea newHolidayArea;
+    HolidayAreaWrapper newHolidayArea(new HolidayArea());
     std::cout << std::endl;
-    EuropeanCentralBank newEuropeanCentralBank;
+    EuropeanCentralBankWrapper newEuropeanCentralBank(new EuropeanCentralBank());
     std::cout << std::endl;
 
-    newBank.depositMoney(tom, 2000.50f);
-    newBank.withdrawMoney(tom, 500.0f);
-    newBank.refillATM(10);
+    newBank.PointerToBank->depositMoney(tom, 2000.50f);
+    newBank.PointerToBank->withdrawMoney(tom, 500.0f);
+    newBank.PointerToBank->refillATM(10);
     tom.cancelBankAccount(false);
     tom.talkEmployee("I need to talk to your boss");
     tom.robBank(true);
 
-    std::cout << "Number of counters: " << newBank.numBankCounters << " (print directly)" << std::endl;
-    newBank.printAmountCounters();
+    std::cout << "Number of counters: " << newBank.PointerToBank->numBankCounters << " (print directly)" << std::endl;
+    newBank.PointerToBank->printAmountCounters();
     
-    newBikePark.eatLunch();
-    newBikePark.haveGoodTime();
-    newBikePark.rideDownhill();
-    newBikePark.fillPickupTruckWithBikes(7);
+    newBikePark.PointerToBikePark->eatLunch();
+    newBikePark.PointerToBikePark->haveGoodTime();
+    newBikePark.PointerToBikePark->rideDownhill();
+    newBikePark.PointerToBikePark->fillPickupTruckWithBikes(7);
     newBike.inflateTires(27.0f, 20.0f);
     newBike.repair();
     newBike.setupSuspension(95.4f, 25);
@@ -498,18 +555,18 @@ int main()
     std::cout << "Wheel size: " << newBike.wheelSize << " (print directly)" << std::endl;
     newBike.printwheelSize();
 
-    float accelerateBikeReturn = newPedals.accelerateBike(8.5f, 15.0f);
-    newPedals.assemble();
-    newPedals.turn();
-    newPedals.hitShin(10);
+    float accelerateBikeReturn = newPedals.PointerToPedals->accelerateBike(8.5f, 15.0f);
+    newPedals.PointerToPedals->assemble();
+    newPedals.PointerToPedals->turn();
+    newPedals.PointerToPedals->hitShin(10);
 
     std::cout << "You need to drive " << accelerateBikeReturn << " km/h faster!" << std::endl;
 
-    newHolidayArea.rentBike(100, 6);
-    newHolidayArea.buyTicketBikePark(2, 39);
+    newHolidayArea.PointerToHolidayArea->rentBike(100, 6);
+    newHolidayArea.PointerToHolidayArea->buyTicketBikePark(2, 39);
     
-    newEuropeanCentralBank.increasKeyInterestRate(0.05f);
-    newEuropeanCentralBank.printMoney(150.00f);
+    newEuropeanCentralBank.PointerToEuropeanCentralBank->increasKeyInterestRate(0.05f);
+    newEuropeanCentralBank.PointerToEuropeanCentralBank->printMoney(150.00f);
 
     std::cout << "good to go!" << std::endl;
     std::cout << std::endl;
